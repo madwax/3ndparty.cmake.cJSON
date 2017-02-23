@@ -16,10 +16,17 @@ set( cJSON_DEFINES "-DTARGE_BASE=1" )
 set( cJSON_INCLUDE_DIR_PRIVATE "" )
 set( cJSON_LINK_PRIVATE "" )
 set( cJSON_DEFINES_PRIVATE "-DTARGET_BASE_BUILD=1" )
+set( cJSON_COMPILE_FLAGS_PRIVATE "" )
 
 if( MSVC )
-	# I've tried to remove the unknown prama warnings but /|-wd4068 does not work
-	list( APPEND cJSON_DEFINES_PRIVATE "-D_CRT_SECURE_NO_WARNINGS" )
+	list( APPEND cJSON_DEFINES_PRIVATE 
+		"-D_CRT_SECURE_NO_WARNINGS" 
+	)
+	
+	list( APPEND cJSON_COMPILE_FLAGS_PRIVATE 
+		"/wd4068"
+	)
+	
 endif()
 
 add_library( cJSON STATIC ${cJSON_SOURCES} )
@@ -27,6 +34,7 @@ add_library( cJSON STATIC ${cJSON_SOURCES} )
 target_include_directories( cJSON PRIVATE ${cJSON_INCLUDE_DIR} )
 target_compile_definitions( cJSON PRIVATE ${cJSON_DEFINES} ${cJSON_DEFINES_PRIVATE} )
 target_link_libraries( cJSON PRIVATE ${cJSON_LINK} )
+target_compile_options( cJSON PRIVATE ${cJSON_COMPILE_FLAGS_PRIVATE} )
 
 target_include_directories( cJSON INTERFACE $<BUILD_INTERFACE:${cJSON_INCLUDE_DIR}> )
 target_compile_definitions( cJSON INTERFACE ${cJSON_DEFINES} )
